@@ -36,4 +36,9 @@
     margin: 5px 0;
     font-size: var(--font-reg);
   }
+
+  .card-img-container img {
+    width: 250px;
+    height: 250px;
+  }
   
