@@ -1,0 +1,36 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/places/place-index.css' %}"/>
+{% endblock %} 
+{% block content %}
+
+<section class="page-header">
+  <h1>Architectural Oddities and Attractions</h1>
+  {% comment %} <img src="{% static 'images/cool-cat.svg' %}" alt="A cool cat" />
+  <img src="{% static 'images/happy-cat.svg' %}" alt="A happy cat" />
+  <img src="{% static 'images/teacup-cat.svg' %}" alt="A cat in a teacup" />
+  <img src="{% static 'images/cat-in-box.svg' %}" alt="A cat in a box" /> {% endcomment %}
+</section>
+
+<section class="card-container">
+  {% for place in places %}
+    <div class="card">
+      <div class="card-content">
+        <div class="card-img-container">
+          <img
+            src="{% static '' %}"
+            alt=""
+          />
+        </div>
+        <h2 class="card-title">{{ place.name }}</h2>
+        {% if place.style == "Novelty" %}
+        <p>An attraction in {{place.location}} unlike any other!</p>
+        {% endif %}
+        <p>A {{ place.location }} attraction built in {{place.year}}.</p>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+
+{% endblock %}
