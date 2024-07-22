@@ -1,6 +1,20 @@
 from django.shortcuts import render
 # from django.http import HttpResponse
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Place
+
+class PlaceCreate(CreateView):
+    model = Place
+    fields = '__all__'
+
+class PlaceUpdate(UpdateView):
+    model = Place
+    # Let's disallow the renaming of a cat by excluding the name field!
+    fields = ['location', 'style', 'year']
+
+class PlaceDelete(DeleteView):
+    model = Place
+    success_url = '/places/'
 
 # class Place:
 #     def __init__(self, name, location, style, year):

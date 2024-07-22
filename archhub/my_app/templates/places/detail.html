@@ -14,6 +14,10 @@
     <p>An attraction in {{place.location}} unlike any other!</p>
     {% endif %}
     <p>A {{ place.location }} attraction built in {{place.year}}.</p>
+    <div class="place-actions">
+        <a href="{% url 'place-update' place.id %}" class="btn warn">Edit</a>
+        <a href="{% url 'place-delete' place.id %}" class="btn danger">Delete</a>
+      </div>
   </div>
 </section>
 {% endblock %}
