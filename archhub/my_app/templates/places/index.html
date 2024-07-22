@@ -16,6 +16,7 @@
 <section class="card-container">
   {% for place in places %}
     <div class="card">
+      <a href="{% url 'place-detail' place.id %}">
       <div class="card-content">
         <div class="card-img-container">
           <img
@@ -29,6 +30,7 @@
         {% endif %}
         <p>A {{ place.location }} attraction built in {{place.year}}.</p>
       </div>
+    </a>
     </div>
   {% endfor %}
 </section>

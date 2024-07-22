@@ -1,0 +1,19 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/places/place-detail.css' %}" />
+{% endblock %} 
+{% block content %}
+<section class="place-container">
+  <div class="place-img">
+    <img src="{% static 'images/outlet-sculpture.svg' %}" alt="" />
+  </div>
+  <div class="place-details">
+    <h1>{{ place.name }}</h1>
+    {% if place.style == "Novelty" %}
+    <p>An attraction in {{place.location}} unlike any other!</p>
+    {% endif %}
+    <p>A {{ place.location }} attraction built in {{place.year}}.</p>
+  </div>
+</section>
+{% endblock %}
