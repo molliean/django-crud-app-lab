@@ -5,11 +5,26 @@ from django.urls import reverse
 
 
 # Create your models here.
+
+class Architect(models.Model):
+    name = models.CharField(max_length=100)
+    bio = models.TextField(max_length=1000)
+    # place = models.ForeignKey(Place, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('architect-detail', kwargs={'pk': self.id})
+
+
+
 class Place(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     style = models.TextField(max_length=100)
     year = models.IntegerField()
+    architects = models.ManyToManyField(Architect)
 
     def __str__(self):
         return self.name
@@ -38,13 +53,3 @@ class Hours(models.Model):
         return f"{self.day}: {self.open} - {self.close}"
 
 
-class Architect(models.Model):
-    name = models.CharField(max_length=100)
-    bio = models.TextField(max_length=1000)
-    place = models.ForeignKey(Place, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-    
-    def get_absolute_url(self):
-        return reverse('architect-detail', kwargs={'pk': self.id})

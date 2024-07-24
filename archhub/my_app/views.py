@@ -68,8 +68,9 @@ def place_index(request):
 
 def place_detail(request, place_id):
     place = Place.objects.get(id=place_id)
+    architects = Architect.objects.exclude(id__in=place.architects.all().values_list('id'))
     hours_form = HoursForm()
-    return render(request, 'places/detail.html', {'place': place, 'hours_form': hours_form})
+    return render(request, 'places/detail.html', {'place': place, 'hours_form': hours_form, 'architects': architects})
 
 def add_hours(request, place_id):
     form = HoursForm(request.POST)
@@ -77,6 +78,14 @@ def add_hours(request, place_id):
         hour = form.save(commit=False)
         hour.place_id = place_id
         hour.save()
+    return redirect('place-detail', place_id=place_id)
+
+def associate_architect(request, place_id, architect_id):
+    Place.objects.get(id=place_id).architects.add(architect_id)
+    return redirect('place-detail', place_id=place_id)
+
+def remove_architect(request, place_id, architect_id):
+    Place.objects.get(id=place_id).architects.remove(architect_id)
     return redirect('place-detail', place_id=place_id)
 
 

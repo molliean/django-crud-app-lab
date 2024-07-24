@@ -18,4 +18,6 @@ urlpatterns = [
     path('architects/', views.ArchitectList.as_view(), name='architect-index'),
     path('architects/<int:pk>/update/', views.ArchitectUpdate.as_view(), name='architect-update'),
     path('architects/<int:pk>/delete/', views.ArchitectDelete.as_view(), name='architect-delete'),
+    path('architects/<int:place_id>/associate-architect/<int:architect_id>/', views.associate_architect, name='associate-architect'),
+    path('architects/<int:place_id>/remove-architect/<int:architect_id>/', views.remove_architect, name='remove-architect'),
 ]

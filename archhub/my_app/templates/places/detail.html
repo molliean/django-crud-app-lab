@@ -30,8 +30,8 @@
   <button type="submit" class="btn submit">Add Hours</button>
 </form>
 
-<div class="feedings-toy-container">
-    <section class="">
+<div class="hours-architect-container">
+    <section class="hours-container">
       <div class="subsection-title">
         <h2>Visiting Hours</h2>
       </div>
@@ -58,6 +58,51 @@
     </div>
       {% endif %}
     </section>
+
+    <section class="architect-container">
+      <div class="subsection-title">
+        <h2>Architects</h2>
+      </div>
+
+      <h3>{{ place.name }} Architects</h3>
+      <div class="subsection-content">
+        {% if place.architects.count %} 
+          {% for architect in place.architects.all %}
+            <div class="architect-container">
+              <a href="{% url 'architect-detail' architect.id %}">
+                <p>{{ architect.name }}</p>
+              </a>
+              <form action="{% url 'remove-architect' place.id architect.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove Architect</button>
+              </form>
+            </div>
+          {% endfor %} 
+        {% else %}
+          <p class="no-architects">No architects assigned.</p>
+        {% endif %}
+      </div>
+
+      <h3>Choose Architects for {{ place.name }}</h3>
+      <div class="subsection-content">
+        {% if architects.count %} 
+          {% for architect in architects.all %}
+            <div class="architect-container">
+              <a href="{% url 'architect-detail' architect.id %}">
+                <p>{{ architect.name }}</p>
+              </a>
+              <form action="{% url 'associate-architect' place.id architect.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn submit">Assign architect</button>
+              </form>
+            </div>
+          {% endfor %} 
+        {% else %}
+          <p class="all-architects">No remaining architects.</p>
+        {% endif %}
+      </div>
+    </section>
+
   </div>
   
 
