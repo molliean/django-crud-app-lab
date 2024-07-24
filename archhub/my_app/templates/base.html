@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" type="image/png" href="{% static "images/nav-logo.png" %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static "" %}" />
     <title>ArchHub</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     {% block head %} 
@@ -22,7 +22,9 @@
       <nav>
         <ul>
           <li><a href="{% url 'place-index' %}">All Destinations</a></li>
+          <li><a href="{% url 'architect-index' %}">All Architects</a></li>
           <li><a href="{% url 'place-create' %}">Add Destination</a></li>
+          <li><a href="{% url 'architect-create' %}">Add Architect</a></li>
           <li><a href="{% url 'about' %}">About</a></li>
         </ul>
       </nav>

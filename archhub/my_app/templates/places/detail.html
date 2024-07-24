@@ -20,4 +20,45 @@
       </div>
   </div>
 </section>
+
+{% comment %} ======= {% endcomment %}
+
+<h3>Add New Visiting Hours</h3>
+<form action="{% url "add-hours" place.id %}" method="post" class="subsection-content">
+  {% csrf_token %}
+  {{ hours_form.as_p }}
+  <button type="submit" class="btn submit">Add Hours</button>
+</form>
+
+<div class="feedings-toy-container">
+    <section class="">
+      <div class="subsection-title">
+        <h2>Visiting Hours</h2>
+      </div>
+      {% if place.hours_set.all.count %}
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for hours in place.hours_set.all %}
+            <tr>
+              <td>{{hours.day}}</td>
+              <td>{{hours.open}} - {{hours.close}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class='subsection-content'>
+        <p>{{ place.name }} hours coming soon!</p>
+    </div>
+      {% endif %}
+    </section>
+  </div>
+  
+
 {% endblock %}

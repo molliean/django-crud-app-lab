@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/architects/architect-detail.css' %}" />
+{% endblock %} 
+{% block content %}
+
+<div class="card">
+    <div class="card-bg"></div>
+    <div class="card-content">
+      <h2>{{ architect.name }}</h2>
+      <p>{{ architect.bio }}</p>
+    </div>
+  </div>
+  <a href="{% url 'architect-update' architect.id %}" class="btn warn">Edit</a>
+  <a href="{% url 'architect-delete' architect.id %}" class="btn danger">Delete</a>
+
+{% endblock %}
