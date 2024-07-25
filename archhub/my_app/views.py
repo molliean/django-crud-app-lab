@@ -4,37 +4,45 @@ from django.shortcuts import render, redirect
 # from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView 
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Place, Architect
 from .forms import HoursForm
 
-class PlaceCreate(CreateView):
+class PlaceCreate(LoginRequiredMixin, CreateView):
     model = Place
-    fields = '__all__'
+    fields = ['name', 'location', 'style', 'year']
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class PlaceUpdate(UpdateView):
+class PlaceUpdate(LoginRequiredMixin, UpdateView):
     model = Place
     # Let's disallow the renaming of a cat by excluding the name field!
     fields = ['location', 'style', 'year']
 
-class PlaceDelete(DeleteView):
+class PlaceDelete(LoginRequiredMixin, DeleteView):
     model = Place
     success_url = '/places/'
 
-class ArchitectCreate(CreateView):
+class ArchitectCreate(LoginRequiredMixin, CreateView):
     model = Architect
     fields = '__all__'
 
-class ArchitectList(ListView):
+class ArchitectList(LoginRequiredMixin, ListView):
     model = Architect
 
-class ArchitectDetail(DetailView):
+class ArchitectDetail(LoginRequiredMixin, DetailView):
     model = Architect
 
-class ArchitectUpdate(UpdateView):
+class ArchitectUpdate(LoginRequiredMixin, UpdateView):
     model = Architect
     fields = ['bio']
 
-class ArchitectDelete(DeleteView):
+class ArchitectDelete(LoginRequiredMixin, DeleteView):
     model = Architect
     success_url = '/architects/'
     
@@ -55,23 +63,26 @@ class ArchitectDelete(DeleteView):
 # ]
 
 # Create your views here.
-def home(request):
-    return render(request, 'home.html')
+class Home(LoginView):
+    template_name = 'home.html'
 
 def about(request):
     return render(request, 'about.html')
 
+@login_required
 def place_index(request):
     # 'places' is the variable name (place) in places/index.html
-    places = Place.objects.all()
+    places = Place.objects.filter(user=request.user)
     return render(request, 'places/index.html', {'places': places})
 
+@login_required
 def place_detail(request, place_id):
     place = Place.objects.get(id=place_id)
     architects = Architect.objects.exclude(id__in=place.architects.all().values_list('id'))
     hours_form = HoursForm()
     return render(request, 'places/detail.html', {'place': place, 'hours_form': hours_form, 'architects': architects})
 
+@login_required
 def add_hours(request, place_id):
     form = HoursForm(request.POST)
     if form.is_valid():
@@ -80,19 +91,33 @@ def add_hours(request, place_id):
         hour.save()
     return redirect('place-detail', place_id=place_id)
 
+@login_required
 def associate_architect(request, place_id, architect_id):
     Place.objects.get(id=place_id).architects.add(architect_id)
     return redirect('place-detail', place_id=place_id)
 
+@login_required
 def remove_architect(request, place_id, architect_id):
     Place.objects.get(id=place_id).architects.remove(architect_id)
     return redirect('place-detail', place_id=place_id)
 
 
-    # place = Place.objects.get(id=place_id)
-    # form = HoursForm(request.POST)
-    # if form.is_valid():
-    #     hour = form.save(commit=False)
-    #     hour.place = place
-    #     hour.save()
-    # return render(request, 'places/detail.html', {'place': place})
+def signup(request):
+    error_message = ''
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('place-index')
+        else:
+            error_message = 'Invalid sign up - try again'
+    form = UserCreationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'signup.html', context)
+    # Same as: 
+    # return render(
+    #     request, 
+    #     'signup.html',
+    #     {'form': form, 'error_message': error_message}
+    # )
